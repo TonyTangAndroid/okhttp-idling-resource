@@ -14,8 +14,6 @@ import java.util.concurrent.TimeUnit;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -36,44 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
     callRequestButton.setOnClickListener(
         view -> {
-          callRequestButton.setEnabled(false);
-          progressBar.setVisibility(View.VISIBLE);
-          final long startTimeMillis = System.currentTimeMillis();
-
-          service
-              .listRepositories("pawel-schmidt", "updated")
-              .enqueue(
-                  new Callback<List<RepoEntity>>() {
-                    @Override
-                    public void onResponse(
-                        final Call<List<RepoEntity>> call,
-                        final Response<List<RepoEntity>> response) {
-                      callRequestButton.setEnabled(true);
-                      progressBar.setVisibility(View.INVISIBLE);
-
-                      final long elapsedMillis = System.currentTimeMillis() - startTimeMillis;
-                      final String elapsedTime =
-                          getString(R.string.activity_main_seek_request_time_fmt, elapsedMillis);
-
-                      final StringBuilder builder = new StringBuilder(elapsedTime);
-                      for (final RepoEntity repoEntity : response.body()) {
-                        builder.append(
-                            String.format(
-                                "<br/><br/><a href=\"%s\">%s</a>",
-                                repoEntity.getUrl(), repoEntity.getName()));
-                      }
-
-                      responseTextView.setText(Html.fromHtml(builder.toString()));
-                    }
-
-                    @Override
-                    public void onFailure(final Call<List<RepoEntity>> call, final Throwable t) {
-                      callRequestButton.setEnabled(true);
-                      progressBar.setVisibility(View.INVISIBLE);
-                      responseTextView.setText(
-                          getString(R.string.activity_main_error_fmt, t.getMessage()));
-                    }
-                  });
+          extracted();
         });
 
     responseTextView.setMovementMethod(LinkMovementMethod.getInstance());
@@ -89,26 +50,60 @@ public class MainActivity extends AppCompatActivity {
           }
 
           @Override
-          public void onStartTrackingTouch(final SeekBar seekBar) {}
+          public void onStartTrackingTouch(final SeekBar seekBar) {
+          }
 
           @Override
-          public void onStopTrackingTouch(final SeekBar seekBar) {}
+          public void onStopTrackingTouch(final SeekBar seekBar) {
+          }
         });
 
     seekBar.setProgress(5);
   }
 
+  private void extracted() {
+    callRequestButton.setEnabled(false);
+    progressBar.setVisibility(View.VISIBLE);
+    final long startTimeMillis = System.currentTimeMillis();
+
+    service
+        .listRepositories("pawel-schmidt", "updated")
+        .enqueue(
+            new Callback<List<RepoEntity>>() {
+              @Override
+              public void onResponse(
+                  final Call<List<RepoEntity>> call,
+                  final Response<List<RepoEntity>> response) {
+                callRequestButton.setEnabled(true);
+                progressBar.setVisibility(View.INVISIBLE);
+
+                final long elapsedMillis = System.currentTimeMillis() - startTimeMillis;
+                final String elapsedTime =
+                    getString(R.string.activity_main_seek_request_time_fmt, elapsedMillis);
+
+                final StringBuilder builder = new StringBuilder(elapsedTime);
+                for (final RepoEntity repoEntity : response.body()) {
+                  builder.append(
+                      String.format(
+                          "<br/><br/><a href=\"%s\">%s</a>",
+                          repoEntity.getUrl(), repoEntity.getName()));
+                }
+
+                responseTextView.setText(Html.fromHtml(builder.toString()));
+              }
+
+              @Override
+              public void onFailure(final Call<List<RepoEntity>> call, final Throwable t) {
+                callRequestButton.setEnabled(true);
+                progressBar.setVisibility(View.INVISIBLE);
+                responseTextView.setText(
+                    getString(R.string.activity_main_error_fmt, t.getMessage()));
+              }
+            });
+  }
+
   private void setupRetrofit() {
-
-    final Retrofit retrofit =
-        new Retrofit.Builder()
-            .baseUrl("https://api.github.com/")
-            .client(
-                OkhttpProvider.get((App) getApplication()))
-            .addConverterFactory(GsonConverterFactory.create())
-            .build();
-
-    service = retrofit.create(GitHubService.class);
+    this.service = OkhttpProvider.gitHubService(OkhttpProvider.get((App) getApplication()));
   }
 
   private void bindViews() {
