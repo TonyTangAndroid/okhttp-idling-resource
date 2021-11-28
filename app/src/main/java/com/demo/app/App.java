@@ -1,9 +1,11 @@
 package com.demo.app;
 
 import android.app.Application;
-import com.simplemented.okdelay.DelayInterceptor;
+import androidx.annotation.NonNull;
 import com.simplemented.okdelay.SimpleDelayProvider;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.OkHttpClient.Builder;
 
@@ -20,7 +22,16 @@ public class App extends Application implements OkhttpProvider {
   }
 
   private void init() {
-    okHttpClient = new Builder().addInterceptor(new DelayInterceptor(provider)).build();
+    Builder builder = new Builder();
+    for (Interceptor interceptor : interceptors()) {
+      builder.addInterceptor(interceptor);
+    }
+    okHttpClient = builder.build();
+  }
+
+  @NonNull
+  public List<Interceptor> interceptors() {
+    return InterceptorListProvider.prod(provider);
   }
 
   public SimpleDelayProvider delayProvider() {
