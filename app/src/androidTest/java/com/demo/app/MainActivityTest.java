@@ -52,7 +52,7 @@ public class MainActivityTest {
     ViewInteraction loading = onView(withText("Loading"));
     loading.check(matches(isDisplayed()));
 
-    IdlingRegistry.getInstance().register(OkhttpProvider.getResource());
+    IdlingRegistry.getInstance().register(MainActivity.resource);
 
     //after 6 seconds, it is success
     ViewInteraction success = onView(withText("Success"));
