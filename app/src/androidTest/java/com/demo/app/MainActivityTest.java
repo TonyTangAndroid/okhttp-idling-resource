@@ -16,6 +16,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 import com.adevinta.android.barista.rule.flaky.AllowFlaky;
 import com.adevinta.android.barista.rule.flaky.FlakyTestRule;
+import com.adevinta.android.barista.rule.flaky.Repeat;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
@@ -35,6 +36,7 @@ public class MainActivityTest {
   @Rule public RuleChain chain = RuleChain.outerRule(flakyRule).around(activityRule);
 
   @Test
+  @Repeat(times = 9)
   public void basicTextCheck() {
 
     ViewInteraction totalViewCount = onView(withText("CALL REQUEST"));
