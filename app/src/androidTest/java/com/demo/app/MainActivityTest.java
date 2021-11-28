@@ -38,8 +38,7 @@ public class MainActivityTest {
   }
 
   @Test
-  public void whenCallRequestIsClickedAndNetworkReturned_shouldShowResult()
-      throws InterruptedException {
+  public void whenCallRequestIsClickedAndNetworkReturned_shouldShowResult() {
 
     //by default, it is idle
     ViewInteraction state = onView(withText("Idle"));
@@ -52,7 +51,7 @@ public class MainActivityTest {
     ViewInteraction loading = onView(withText("Loading"));
     loading.check(matches(isDisplayed()));
 
-    IdlingRegistry.getInstance().register(MainActivity.resource);
+    IdlingRegistry.getInstance().register(OkhttpProvider.getResource());
 
     //after 6 seconds, it is success
     ViewInteraction success = onView(withText("Success"));

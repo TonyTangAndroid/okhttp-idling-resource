@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void setupRetrofit() {
-    this.service = OkhttpProvider.gitHubService(OkhttpProvider.get((App) getApplication()));
+    this.service = OkhttpProvider.gitHubService(OkhttpProvider.get());
   }
 
   private void bindViews() {
