@@ -38,22 +38,18 @@ public class MainActivityTest {
   @Test
   public void whenCallRequestIsClickedAndNetworkReturned_shouldShowResult() {
 
-    //by default, it is idle
+    // by default, it is idle
     ViewInteraction state = onView(withText("Idle"));
     state.check(matches(isDisplayed()));
 
-
     onView(withText("CALL REQUEST")).perform(ViewActions.click());
 
-    //With IdlingRegistry applied, we will never check the intermediate state.
+    // With IdlingRegistry applied, we will never check the intermediate state.
     ViewInteraction loading = onView(withText("Loading"));
     loading.check(doesNotExist());
 
-
-    //after 6 seconds, it is success
+    // after 6 seconds, it is success
     ViewInteraction success = onView(withText("Success"));
     success.check(matches(isDisplayed()));
-
   }
-
 }

@@ -5,7 +5,7 @@ subprojects { project ->
 }
 
 googleJavaFormat {
-  toolVersion = "1.7"
+  toolVersion = "1.8"
 }
 
 //  Google Java Format pre-commit hook installation

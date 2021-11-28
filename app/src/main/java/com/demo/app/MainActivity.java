@@ -43,12 +43,10 @@ public class MainActivity extends AppCompatActivity {
           }
 
           @Override
-          public void onStartTrackingTouch(final SeekBar seekBar) {
-          }
+          public void onStartTrackingTouch(final SeekBar seekBar) {}
 
           @Override
-          public void onStopTrackingTouch(final SeekBar seekBar) {
-          }
+          public void onStopTrackingTouch(final SeekBar seekBar) {}
         });
     seekBar.setProgress(5);
   }
@@ -56,7 +54,8 @@ public class MainActivity extends AppCompatActivity {
   private void setDelay(int time) {
     final long duration = time * 500L;
     ((App) getApplication()).delayProvider().setDelay(duration, TimeUnit.MILLISECONDS);
-    seekBarValueTextView.setText(getString(R.string.activity_main_seek_bar_value_fmt, duration / 1000f));
+    seekBarValueTextView.setText(
+        getString(R.string.activity_main_seek_bar_value_fmt, duration / 1000f));
   }
 
   private void execute() {
@@ -70,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .as(autoDisposable(from(this)))
-        .subscribe(response -> onSuccess(response, startTimeMillis),this::onFailure );
+        .subscribe(response -> onSuccess(response, startTimeMillis), this::onFailure);
   }
 
   public void onSuccess(final List<RepoEntity> response, long startTimeMillis) {
@@ -85,12 +84,10 @@ public class MainActivity extends AppCompatActivity {
     return getString(R.string.activity_main_seek_request_time_fmt, elapsedMillis);
   }
 
-
-  public void onFailure( final Throwable t) {
+  public void onFailure(final Throwable t) {
     callRequestButton.setEnabled(true);
     progressBar.setVisibility(View.INVISIBLE);
-    responseTextView.setText(
-        getString(R.string.activity_main_error_fmt, t.getMessage()));
+    responseTextView.setText(getString(R.string.activity_main_error_fmt, t.getMessage()));
     requestState.setText(R.string.error);
   }
 
