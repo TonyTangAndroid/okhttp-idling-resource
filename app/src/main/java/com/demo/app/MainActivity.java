@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
     callRequestButton.setOnClickListener(
         view -> {
-          extracted();
+          execute();
         });
 
     responseTextView.setMovementMethod(LinkMovementMethod.getInstance());
@@ -43,10 +43,7 @@ public class MainActivity extends AppCompatActivity {
         new SeekBar.OnSeekBarChangeListener() {
           @Override
           public void onProgressChanged(final SeekBar seekBar, final int i, final boolean b) {
-            final long duration = i * 500L;
-            ((App) getApplication()).delayProvider().setDelay(duration, TimeUnit.MILLISECONDS);
-            seekBarValueTextView.setText(
-                getString(R.string.activity_main_seek_bar_value_fmt, duration / 1000f));
+            MainActivity.this.setDelay(i);
           }
 
           @Override
@@ -61,7 +58,14 @@ public class MainActivity extends AppCompatActivity {
     seekBar.setProgress(5);
   }
 
-  private void extracted() {
+  private void setDelay(int time) {
+    final long duration = time * 500L;
+    ((App) getApplication()).delayProvider().setDelay(duration, TimeUnit.MILLISECONDS);
+    seekBarValueTextView.setText(
+        getString(R.string.activity_main_seek_bar_value_fmt, duration / 1000f));
+  }
+
+  private void execute() {
     callRequestButton.setEnabled(false);
     progressBar.setVisibility(View.VISIBLE);
     final long startTimeMillis = System.currentTimeMillis();
