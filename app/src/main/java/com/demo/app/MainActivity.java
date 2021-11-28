@@ -18,7 +18,6 @@ import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
 
-  public static  StateIdlingResource resource = new StateIdlingResource();
   private TextView seekBarValueTextView;
   private TextView requestState;
   private SeekBar seekBar;
@@ -79,7 +78,6 @@ public class MainActivity extends AppCompatActivity {
     progressBar.setVisibility(View.INVISIBLE);
     responseTextView.setText(Mapper.asSpan(response, eclipsedTime(startTimeMillis)));
     requestState.setText(R.string.success);
-    resource.markAsIdle();
   }
 
   private String eclipsedTime(long startTimeMillis) {
@@ -94,7 +92,6 @@ public class MainActivity extends AppCompatActivity {
     responseTextView.setText(
         getString(R.string.activity_main_error_fmt, t.getMessage()));
     requestState.setText(R.string.error);
-    resource.markAsIdle();
   }
 
   private void setupRetrofit() {
