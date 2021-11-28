@@ -36,6 +36,7 @@ dependencies {
 
   implementation 'com.uber.autodispose:autodispose-android-archcomponents:1.4.0'
 
+  implementation "com.squareup.okhttp3:logging-interceptor:4.9.3"
   implementation 'com.squareup.okhttp3:okhttp:4.9.3'
   implementation 'com.squareup.retrofit2:retrofit:2.9.0'
   implementation 'com.squareup.retrofit2:adapter-rxjava2:2.9.0'
@@ -60,4 +61,5 @@ dependencies {
   androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
   androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.4.0'
   androidTestImplementation  'com.adevinta.android:barista:4.2.0'
+  androidTestImplementation 'com.github.gmazzo:okhttp-mock:1.5.0'
 }
