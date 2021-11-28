@@ -35,10 +35,26 @@ public class MainActivityTest {
   }
 
   @Test
-  public void whenCallRequestIsClickedAndNetworkReturned_shouldShowResult() {
-    onView(withText("CALL REQUEST")).perform(ViewActions.click());
-    ViewInteraction state = onView(withText("Loading"));
+  public void whenCallRequestIsClickedAndNetworkReturned_shouldShowResult()
+      throws InterruptedException {
+
+    //by default, it is idle
+    ViewInteraction state = onView(withText("Idle"));
     state.check(matches(isDisplayed()));
+
+
+    onView(withText("CALL REQUEST")).perform(ViewActions.click());
+
+    //when the button is clicked, it is loading
+    ViewInteraction loading = onView(withText("Loading"));
+    loading.check(matches(isDisplayed()));
+
+    //Without sleep, the network response will not be returned.
+    Thread.sleep(6000);
+
+    //after 6 seconds, it is success
+    ViewInteraction success = onView(withText("Success"));
+    success.check(matches(isDisplayed()));
 
   }
 
