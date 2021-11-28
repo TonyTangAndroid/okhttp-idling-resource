@@ -14,16 +14,25 @@ import androidx.test.espresso.ViewInteraction;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
+import com.adevinta.android.barista.rule.flaky.AllowFlaky;
+import com.adevinta.android.barista.rule.flaky.FlakyTestRule;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.RuleChain;
 import org.junit.runner.RunWith;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 public class MainActivityTest {
 
+  // Use a RuleChain to wrap your ActivityTestRule with a FlakyTestRule
+  private final FlakyTestRule flakyRule = new FlakyTestRule();
+
   @Rule
-  public ActivityScenarioRule<MainActivity> rule = new ActivityScenarioRule<>(MainActivity.class);
+  public ActivityScenarioRule<MainActivity> activityRule =
+      new ActivityScenarioRule<>(MainActivity.class);
+
+  @Rule public RuleChain chain = RuleChain.outerRule(flakyRule).around(activityRule);
 
   @Test
   public void basicTextCheck() {
@@ -39,6 +48,7 @@ public class MainActivityTest {
   }
 
   @Test
+  @AllowFlaky(attempts = 4)
   public void whenCallRequestIsClickedAndNetworkReturned_shouldShowResult() {
 
     // by default, it is idle
