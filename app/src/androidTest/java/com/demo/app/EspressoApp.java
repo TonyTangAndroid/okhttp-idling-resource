@@ -8,6 +8,7 @@ public class EspressoApp extends App {
   @Override
   public void onCreate() {
     super.onCreate();
+    // Manually register network callback.
     IdlingRegistry.getInstance()
         .register(OkHttp3IdlingResource.create("OkHttp", okhttpClientInstance()));
   }
