@@ -95,15 +95,15 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void setupRetrofit() {
-    this.service = OkhttpProvider.gitHubService(OkhttpProvider.get());
+    this.service = ServiceProvider.gitHubService(((App) getApplication()).okhttpClientInstance());
   }
 
   private void bindViews() {
-    seekBarValueTextView = (TextView) findViewById(R.id.activity_main_seek_bar_value);
-    seekBar = (SeekBar) findViewById(R.id.activity_main_seek_bar);
-    callRequestButton = (Button) findViewById(R.id.activity_main_call_request);
-    progressBar = (ProgressBar) findViewById(R.id.activity_main_progress_bar);
-    responseTextView = (TextView) findViewById(R.id.activity_main_response);
-    requestState = (TextView) findViewById(R.id.activity_main_request_state);
+    seekBarValueTextView = findViewById(R.id.activity_main_seek_bar_value);
+    seekBar = findViewById(R.id.activity_main_seek_bar);
+    callRequestButton = findViewById(R.id.activity_main_call_request);
+    progressBar = findViewById(R.id.activity_main_progress_bar);
+    responseTextView = findViewById(R.id.activity_main_response);
+    requestState = findViewById(R.id.activity_main_request_state);
   }
 }
