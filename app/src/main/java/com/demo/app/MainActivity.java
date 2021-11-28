@@ -1,5 +1,8 @@
 package com.demo.app;
 
+import static com.uber.autodispose.AutoDispose.autoDisposable;
+import static com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider.from;
+
 import android.os.Bundle;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
@@ -9,10 +12,10 @@ import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
@@ -71,39 +74,38 @@ public class MainActivity extends AppCompatActivity {
     final long startTimeMillis = System.currentTimeMillis();
 
     service
-        .listRepositories("pawel-schmidt", "updated")
-        .enqueue(
-            new Callback<List<RepoEntity>>() {
-              @Override
-              public void onResponse(
-                  final Call<List<RepoEntity>> call,
-                  final Response<List<RepoEntity>> response) {
-                callRequestButton.setEnabled(true);
-                progressBar.setVisibility(View.INVISIBLE);
+        .list("pawel-schmidt", "updated")
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .as(autoDisposable(from(this)))
+        .subscribe(response -> onSuccess(response, startTimeMillis),this::onFailure );
+  }
 
-                final long elapsedMillis = System.currentTimeMillis() - startTimeMillis;
-                final String elapsedTime =
-                    getString(R.string.activity_main_seek_request_time_fmt, elapsedMillis);
+  public void onSuccess(final List<RepoEntity> response, long startTimeMillis) {
+    callRequestButton.setEnabled(true);
+    progressBar.setVisibility(View.INVISIBLE);
 
-                final StringBuilder builder = new StringBuilder(elapsedTime);
-                for (final RepoEntity repoEntity : response.body()) {
-                  builder.append(
-                      String.format(
-                          "<br/><br/><a href=\"%s\">%s</a>",
-                          repoEntity.getUrl(), repoEntity.getName()));
-                }
+    final long elapsedMillis = System.currentTimeMillis() - startTimeMillis;
+    final String elapsedTime =
+        getString(R.string.activity_main_seek_request_time_fmt, elapsedMillis);
 
-                responseTextView.setText(Html.fromHtml(builder.toString()));
-              }
+    final StringBuilder builder = new StringBuilder(elapsedTime);
+    for (final RepoEntity repoEntity : response) {
+      builder.append(
+          String.format(
+              "<br/><br/><a href=\"%s\">%s</a>",
+              repoEntity.getUrl(), repoEntity.getName()));
+    }
 
-              @Override
-              public void onFailure(final Call<List<RepoEntity>> call, final Throwable t) {
-                callRequestButton.setEnabled(true);
-                progressBar.setVisibility(View.INVISIBLE);
-                responseTextView.setText(
-                    getString(R.string.activity_main_error_fmt, t.getMessage()));
-              }
-            });
+    responseTextView.setText(Html.fromHtml(builder.toString()));
+  }
+
+
+  public void onFailure( final Throwable t) {
+    callRequestButton.setEnabled(true);
+    progressBar.setVisibility(View.INVISIBLE);
+    responseTextView.setText(
+        getString(R.string.activity_main_error_fmt, t.getMessage()));
   }
 
   private void setupRetrofit() {
