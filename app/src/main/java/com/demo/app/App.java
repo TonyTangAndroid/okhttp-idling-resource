@@ -1,25 +1,21 @@
 package com.demo.app;
 
 import android.app.Application;
-import com.simplemented.okdelay.DelayInterceptor;
+import com.simplemented.okdelay.SimpleDelayProvider;
+import java.util.concurrent.TimeUnit;
 
-public class App extends Application implements DelayProvider, DelayInterceptor.DelayProvider {
+public class App extends Application {
 
-  private long delayInMilliseconds = 0L;
+
+  private SimpleDelayProvider provider;
 
   @Override
   public void onCreate() {
     super.onCreate();
-
+    provider = new SimpleDelayProvider(0, TimeUnit.MILLISECONDS);
   }
 
-  @Override
-  public void set(long delayInMilliseconds) {
-    this.delayInMilliseconds = delayInMilliseconds;
-  }
-
-  @Override
-  public long getDelay() {
-    return delayInMilliseconds;
+  public SimpleDelayProvider delayProvider() {
+    return provider;
   }
 }

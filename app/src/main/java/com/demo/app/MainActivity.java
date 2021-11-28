@@ -28,7 +28,6 @@ public class MainActivity extends AppCompatActivity {
   private ProgressBar progressBar;
   private TextView responseTextView;
 
-  private SimpleDelayProvider simpleDelayProvider;
   private GitHubService service;
 
   @Override
@@ -87,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
           @Override
           public void onProgressChanged(final SeekBar seekBar, final int i, final boolean b) {
             final long duration = i * 500L;
-            simpleDelayProvider.setDelay(duration, TimeUnit.MILLISECONDS);
+            ((App) getApplication()).delayProvider().setDelay(duration, TimeUnit.MILLISECONDS);
             seekBarValueTextView.setText(
                 getString(R.string.activity_main_seek_bar_value_fmt, duration / 1000f));
           }
@@ -103,14 +102,13 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void setupRetrofit() {
-    simpleDelayProvider = new SimpleDelayProvider(1L, TimeUnit.SECONDS);
 
     final Retrofit retrofit =
         new Retrofit.Builder()
             .baseUrl("https://api.github.com/")
             .client(
                 new OkHttpClient.Builder()
-                    .addInterceptor(new DelayInterceptor(simpleDelayProvider))
+                    .addInterceptor(new DelayInterceptor(((App) getApplication()).delayProvider()))
                     .build())
             .addConverterFactory(GsonConverterFactory.create())
             .build();
