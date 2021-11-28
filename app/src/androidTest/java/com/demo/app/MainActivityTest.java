@@ -39,6 +39,7 @@ public class MainActivityTest {
 
   @Test
   public void whenCallRequestIsClickedAndNetworkReturned_shouldShowResult() {
+    IdlingRegistry.getInstance().register(OkhttpProvider.getResource());
 
     //by default, it is idle
     ViewInteraction state = onView(withText("Idle"));
@@ -47,11 +48,10 @@ public class MainActivityTest {
 
     onView(withText("CALL REQUEST")).perform(ViewActions.click());
 
-    //when the button is clicked, it is loading
+    //With IdlingRegistry applied, we will never check the intermediate state.
     ViewInteraction loading = onView(withText("Loading"));
-    loading.check(matches(isDisplayed()));
+    loading.check(doesNotExist());
 
-    IdlingRegistry.getInstance().register(OkhttpProvider.getResource());
 
     //after 6 seconds, it is success
     ViewInteraction success = onView(withText("Success"));
