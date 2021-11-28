@@ -1,8 +1,9 @@
 package com.demo.app;
 
 import android.app.Application;
+import com.simplemented.okdelay.DelayInterceptor;
 
-public class App extends Application implements DelayProvider {
+public class App extends Application implements DelayProvider, DelayInterceptor.DelayProvider {
 
   private long delayInMilliseconds = 0L;
 
@@ -18,7 +19,7 @@ public class App extends Application implements DelayProvider {
   }
 
   @Override
-  public long get() {
+  public long getDelay() {
     return delayInMilliseconds;
   }
 }

@@ -4,5 +4,4 @@ public interface DelayProvider {
 
   void set(long delayInMilliseconds);
 
-  long get();
 }
