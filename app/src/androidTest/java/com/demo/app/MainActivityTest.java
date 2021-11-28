@@ -6,6 +6,9 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
+import androidx.test.espresso.Espresso;
+import androidx.test.espresso.IdlingRegistry;
+import androidx.test.espresso.IdlingResource;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
@@ -49,8 +52,7 @@ public class MainActivityTest {
     ViewInteraction loading = onView(withText("Loading"));
     loading.check(matches(isDisplayed()));
 
-    //Without sleep, the network response will not be returned.
-    Thread.sleep(6000);
+    IdlingRegistry.getInstance().register(OkhttpProvider.getResource());
 
     //after 6 seconds, it is success
     ViewInteraction success = onView(withText("Success"));
