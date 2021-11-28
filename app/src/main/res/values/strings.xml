@@ -15,4 +15,8 @@
   <string name="activity_main_error_fmt">An error occurred\n%1$s</string>
   <string name="activity_main_search_query">Type search query here…</string>
   <string name="activity_main_button_label">Call request</string>
+  <string name="error">Error</string>
+  <string name="idle">Idle</string>
+  <string name="success">Success</string>
+  <string name="loading">Loading</string>
 </resources>

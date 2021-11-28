@@ -1,60 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+
+  <LinearLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="com.simplemented.okdelay.MainActivity">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
-        tools:context="com.simplemented.okdelay.MainActivity"
-        >
 
-        <TextView
-            android:id="@+id/activity_main_seek_bar_value"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:text="@string/activity_main_seek_bar_value_fmt"
-            />
+    <TextView
+      android:id="@+id/activity_main_request_state"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="@string/idle" />
 
-        <androidx.appcompat.widget.AppCompatSeekBar
-            android:id="@+id/activity_main_seek_bar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:max="10"
-            android:paddingBottom="@dimen/activity_vertical_margin"
-            android:paddingTop="@dimen/activity_vertical_margin"
-            />
+    <TextView
+      android:id="@+id/activity_main_seek_bar_value"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      tools:text="@string/activity_main_seek_bar_value_fmt" />
 
-        <Button
-            android:id="@+id/activity_main_call_request"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/activity_main_button_label"
-            />
+    <androidx.appcompat.widget.AppCompatSeekBar
+      android:id="@+id/activity_main_seek_bar"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:max="10"
+      android:paddingTop="@dimen/activity_vertical_margin"
+      android:paddingBottom="@dimen/activity_vertical_margin" />
 
-        <ProgressBar
-            android:id="@+id/activity_main_progress_bar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="invisible"
-            />
+    <Button
+      android:id="@+id/activity_main_call_request"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="@string/activity_main_button_label" />
 
-        <TextView
-            android:id="@+id/activity_main_response"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:text="Lorem ipsum"
-            />
+    <ProgressBar
+      android:id="@+id/activity_main_progress_bar"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:visibility="invisible" />
 
-    </LinearLayout>
+
+    <TextView
+      android:id="@+id/activity_main_response"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/activity_horizontal_margin"
+      tools:text="Lorem ipsum" />
+
+  </LinearLayout>
 
 </ScrollView>
