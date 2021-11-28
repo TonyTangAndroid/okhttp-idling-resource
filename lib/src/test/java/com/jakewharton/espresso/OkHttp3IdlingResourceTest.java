@@ -43,7 +43,7 @@ public final class OkHttp3IdlingResourceTest {
       OkHttp3IdlingResource.create(null, client);
       fail();
     } catch (NullPointerException e) {
-      assertThat(e).hasMessage("name == null");
+      assertThat(e).hasMessageThat().contains("name == null");
     }
   }
 
@@ -52,7 +52,7 @@ public final class OkHttp3IdlingResourceTest {
       OkHttp3IdlingResource.create("Ok!", null);
       fail();
     } catch (NullPointerException e) {
-      assertThat(e).hasMessage("client == null");
+      assertThat(e).hasMessageThat().contains("client == null");
     }
   }
 
