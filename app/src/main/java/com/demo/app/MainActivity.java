@@ -4,7 +4,6 @@ import static com.uber.autodispose.AutoDispose.autoDisposable;
 import static com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider.from;
 
 import android.os.Bundle;
-import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.widget.Button;
@@ -16,7 +15,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -34,14 +32,8 @@ public class MainActivity extends AppCompatActivity {
     setContentView(R.layout.activity_main);
     bindViews();
     setupRetrofit();
-
-    callRequestButton.setOnClickListener(
-        view -> {
-          execute();
-        });
-
+    callRequestButton.setOnClickListener(view -> execute());
     responseTextView.setMovementMethod(LinkMovementMethod.getInstance());
-
     seekBar.setOnSeekBarChangeListener(
         new SeekBar.OnSeekBarChangeListener() {
           @Override
@@ -57,15 +49,13 @@ public class MainActivity extends AppCompatActivity {
           public void onStopTrackingTouch(final SeekBar seekBar) {
           }
         });
-
     seekBar.setProgress(5);
   }
 
   private void setDelay(int time) {
     final long duration = time * 500L;
     ((App) getApplication()).delayProvider().setDelay(duration, TimeUnit.MILLISECONDS);
-    seekBarValueTextView.setText(
-        getString(R.string.activity_main_seek_bar_value_fmt, duration / 1000f));
+    seekBarValueTextView.setText(getString(R.string.activity_main_seek_bar_value_fmt, duration / 1000f));
   }
 
   private void execute() {
@@ -84,20 +74,12 @@ public class MainActivity extends AppCompatActivity {
   public void onSuccess(final List<RepoEntity> response, long startTimeMillis) {
     callRequestButton.setEnabled(true);
     progressBar.setVisibility(View.INVISIBLE);
+    responseTextView.setText(Mapper.asSpan(response, eclipsedTime(startTimeMillis)));
+  }
 
+  private String eclipsedTime(long startTimeMillis) {
     final long elapsedMillis = System.currentTimeMillis() - startTimeMillis;
-    final String elapsedTime =
-        getString(R.string.activity_main_seek_request_time_fmt, elapsedMillis);
-
-    final StringBuilder builder = new StringBuilder(elapsedTime);
-    for (final RepoEntity repoEntity : response) {
-      builder.append(
-          String.format(
-              "<br/><br/><a href=\"%s\">%s</a>",
-              repoEntity.getUrl(), repoEntity.getName()));
-    }
-
-    responseTextView.setText(Html.fromHtml(builder.toString()));
+    return getString(R.string.activity_main_seek_request_time_fmt, elapsedMillis);
   }
 
 
