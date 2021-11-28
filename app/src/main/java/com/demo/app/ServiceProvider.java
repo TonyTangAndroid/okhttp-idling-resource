@@ -15,6 +15,7 @@ public class ServiceProvider {
         .client(client)
         .addConverterFactory(GsonConverterFactory.create())
         .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-        .build().create(GitHubService.class);
+        .build()
+        .create(GitHubService.class);
   }
 }
