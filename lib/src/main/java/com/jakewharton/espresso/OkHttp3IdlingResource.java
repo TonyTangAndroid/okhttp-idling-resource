@@ -24,10 +24,11 @@ import okhttp3.OkHttpClient;
 /** An {@link IdlingResource) for {@link OkHttpClient}. */
 public final class OkHttp3IdlingResource implements IdlingResource {
   /**
-   * Create a new {@link IdlingResource} from {@code client} as {@code name}. You must register
-   * this instance using {@code Espresso.registerIdlingResources}.
+   * Create a new {@link IdlingResource} from {@code client} as {@code name}. You must register this
+   * instance using {@code Espresso.registerIdlingResources}.
    */
-  @CheckResult @NonNull
+  @CheckResult
+  @NonNull
   @SuppressWarnings("ConstantConditions") // Extra guards as a library.
   public static OkHttp3IdlingResource create(@NonNull String name, @NonNull OkHttpClient client) {
     if (name == null) throw new NullPointerException("name == null");
@@ -42,25 +43,30 @@ public final class OkHttp3IdlingResource implements IdlingResource {
   private OkHttp3IdlingResource(String name, Dispatcher dispatcher) {
     this.name = name;
     this.dispatcher = dispatcher;
-    dispatcher.setIdleCallback(new Runnable() {
-        @Override public void run() {
-          ResourceCallback callback = OkHttp3IdlingResource.this.callback;
-          if (callback != null) {
-            callback.onTransitionToIdle();
+    dispatcher.setIdleCallback(
+        new Runnable() {
+          @Override
+          public void run() {
+            ResourceCallback callback = OkHttp3IdlingResource.this.callback;
+            if (callback != null) {
+              callback.onTransitionToIdle();
+            }
           }
-        }
-      });
+        });
   }
 
-  @Override public String getName() {
+  @Override
+  public String getName() {
     return name;
   }
 
-  @Override public boolean isIdleNow() {
+  @Override
+  public boolean isIdleNow() {
     return dispatcher.runningCallsCount() == 0;
   }
 
-  @Override public void registerIdleTransitionCallback(ResourceCallback callback) {
+  @Override
+  public void registerIdleTransitionCallback(ResourceCallback callback) {
     this.callback = callback;
   }
 }

@@ -15,6 +15,10 @@
  */
 package com.jakewharton.espresso;
 
+import static com.google.common.truth.Truth.assertThat;
+import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.junit.Assert.fail;
+
 import androidx.test.espresso.IdlingResource;
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
@@ -30,14 +34,11 @@ import okhttp3.mockwebserver.MockWebServer;
 import org.junit.Rule;
 import org.junit.Test;
 
-import static com.google.common.truth.Truth.assertThat;
-import static java.util.concurrent.TimeUnit.SECONDS;
-import static org.junit.Assert.fail;
-
 public final class OkHttp3IdlingResourceTest {
   @Rule public final MockWebServer server = new MockWebServer();
 
-  @Test public void nullNameThrows() {
+  @Test
+  public void nullNameThrows() {
     OkHttpClient client = new OkHttpClient();
     try {
       OkHttp3IdlingResource.create(null, client);
@@ -47,7 +48,8 @@ public final class OkHttp3IdlingResourceTest {
     }
   }
 
-  @Test public void nullClientThrows() {
+  @Test
+  public void nullClientThrows() {
     try {
       OkHttp3IdlingResource.create("Ok!", null);
       fail();
@@ -56,44 +58,52 @@ public final class OkHttp3IdlingResourceTest {
     }
   }
 
-  @Test public void name() {
+  @Test
+  public void name() {
     OkHttpClient client = new OkHttpClient();
     IdlingResource idlingResource = OkHttp3IdlingResource.create("Ok!", client);
     assertThat(idlingResource.getName()).isEqualTo("Ok!");
   }
 
-  @Test public void idleNow() throws InterruptedException {
+  @Test
+  public void idleNow() throws InterruptedException {
     server.enqueue(new MockResponse());
 
     final CountDownLatch requestReady = new CountDownLatch(1);
     final CountDownLatch requestProceed = new CountDownLatch(1);
-    OkHttpClient client = new OkHttpClient.Builder()
-        .addInterceptor(new Interceptor() {
-          @Override public Response intercept(Chain chain) throws IOException {
-            requestReady.countDown();
-            try {
-              requestProceed.await(10, SECONDS);
-            } catch (InterruptedException e) {
-              throw new RuntimeException(e);
-            }
-            return chain.proceed(chain.request());
-          }
-        })
-        .build();
+    OkHttpClient client =
+        new OkHttpClient.Builder()
+            .addInterceptor(
+                new Interceptor() {
+                  @Override
+                  public Response intercept(Chain chain) throws IOException {
+                    requestReady.countDown();
+                    try {
+                      requestProceed.await(10, SECONDS);
+                    } catch (InterruptedException e) {
+                      throw new RuntimeException(e);
+                    }
+                    return chain.proceed(chain.request());
+                  }
+                })
+            .build();
     IdlingResource idlingResource = OkHttp3IdlingResource.create("Ok!", client);
 
     assertThat(idlingResource.isIdleNow()).isTrue();
 
     Call call = client.newCall(new Request.Builder().url(server.url("/")).build());
-    call.enqueue(new Callback() {
-      @Override public void onFailure(Call call, IOException e) {
-        throw new AssertionError();
-      }
+    call.enqueue(
+        new Callback() {
+          @Override
+          public void onFailure(Call call, IOException e) {
+            throw new AssertionError();
+          }
 
-      @Override public void onResponse(Call call, Response response) throws IOException {
-        response.close();
-      }
-    });
+          @Override
+          public void onResponse(Call call, Response response) throws IOException {
+            response.close();
+          }
+        });
 
     // Wait until the interceptor is called signifying we are not idle.
     requestReady.await(10, SECONDS);
@@ -106,18 +116,21 @@ public final class OkHttp3IdlingResourceTest {
     assertThat(idlingResource.isIdleNow()).isTrue();
   }
 
-  @Test public void idleCallback() throws InterruptedException, IOException {
+  @Test
+  public void idleCallback() throws InterruptedException, IOException {
     server.enqueue(new MockResponse());
 
     OkHttpClient client = new OkHttpClient();
     IdlingResource idlingResource = OkHttp3IdlingResource.create("Ok!", client);
 
     final AtomicInteger count = new AtomicInteger();
-    IdlingResource.ResourceCallback callback = new IdlingResource.ResourceCallback() {
-      @Override public void onTransitionToIdle() {
-        count.getAndIncrement();
-      }
-    };
+    IdlingResource.ResourceCallback callback =
+        new IdlingResource.ResourceCallback() {
+          @Override
+          public void onTransitionToIdle() {
+            count.getAndIncrement();
+          }
+        };
     idlingResource.registerIdleTransitionCallback(callback);
 
     assertThat(count.get()).isEqualTo(0);
