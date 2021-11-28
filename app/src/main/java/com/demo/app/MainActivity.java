@@ -9,11 +9,8 @@ import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
-import com.simplemented.okdelay.DelayInterceptor;
-import com.simplemented.okdelay.SimpleDelayProvider;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -107,9 +104,7 @@ public class MainActivity extends AppCompatActivity {
         new Retrofit.Builder()
             .baseUrl("https://api.github.com/")
             .client(
-                new OkHttpClient.Builder()
-                    .addInterceptor(new DelayInterceptor(((App) getApplication()).delayProvider()))
-                    .build())
+                OkhttpProvider.get((App) getApplication()))
             .addConverterFactory(GsonConverterFactory.create())
             .build();
 
