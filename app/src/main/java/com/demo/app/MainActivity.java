@@ -19,6 +19,7 @@ import java.util.concurrent.TimeUnit;
 public class MainActivity extends AppCompatActivity {
 
   private TextView seekBarValueTextView;
+  private TextView requestState;
   private SeekBar seekBar;
   private Button callRequestButton;
   private ProgressBar progressBar;
@@ -59,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void execute() {
+    requestState.setText(R.string.loading);
     callRequestButton.setEnabled(false);
     progressBar.setVisibility(View.VISIBLE);
     final long startTimeMillis = System.currentTimeMillis();
@@ -75,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
     callRequestButton.setEnabled(true);
     progressBar.setVisibility(View.INVISIBLE);
     responseTextView.setText(Mapper.asSpan(response, eclipsedTime(startTimeMillis)));
+    requestState.setText(R.string.success);
   }
 
   private String eclipsedTime(long startTimeMillis) {
@@ -88,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
     progressBar.setVisibility(View.INVISIBLE);
     responseTextView.setText(
         getString(R.string.activity_main_error_fmt, t.getMessage()));
+    requestState.setText(R.string.error);
   }
 
   private void setupRetrofit() {
@@ -100,5 +104,6 @@ public class MainActivity extends AppCompatActivity {
     callRequestButton = (Button) findViewById(R.id.activity_main_call_request);
     progressBar = (ProgressBar) findViewById(R.id.activity_main_progress_bar);
     responseTextView = (TextView) findViewById(R.id.activity_main_response);
+    requestState = (TextView) findViewById(R.id.activity_main_request_state);
   }
 }

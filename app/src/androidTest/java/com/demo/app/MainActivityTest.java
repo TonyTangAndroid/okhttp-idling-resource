@@ -7,6 +7,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 import androidx.test.espresso.ViewInteraction;
+import androidx.test.espresso.action.ViewActions;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
@@ -26,8 +27,19 @@ public class MainActivityTest {
     ViewInteraction totalViewCount = onView(withText("CALL REQUEST"));
     totalViewCount.check(matches(isDisplayed()));
 
-    ViewInteraction absentViewCount = onView(withText("total:151"));
+    ViewInteraction state = onView(withText("Idle"));
+    state.check(matches(isDisplayed()));
+
+    ViewInteraction absentViewCount = onView(withText("random_text"));
     absentViewCount.check(doesNotExist());
+  }
+
+  @Test
+  public void whenCallRequestIsClickedAndNetworkReturned_shouldShowResult() {
+    onView(withText("CALL REQUEST")).perform(ViewActions.click());
+    ViewInteraction state = onView(withText("Loading"));
+    state.check(matches(isDisplayed()));
+
   }
 
 }
